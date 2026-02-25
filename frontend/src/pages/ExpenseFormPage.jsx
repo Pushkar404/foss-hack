@@ -1,8 +1,8 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import api from '../services/api';
-import { useAuth } from '../context/AuthContext';
-import ExpenseForm from '../components/ExpenseForm';
+import React, { useEffect, useMemo, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import api from "../services/api";
+import { useAuth } from "../context/AuthContext";
+import ExpenseForm from "../components/ExpenseForm";
 
 const ExpenseFormPage = ({ mode }) => {
   const navigate = useNavigate();
@@ -10,23 +10,23 @@ const ExpenseFormPage = ({ mode }) => {
   const { user } = useAuth();
 
   const [initialData, setInitialData] = useState(null);
-  const [loading, setLoading] = useState(mode === 'edit');
+  const [loading, setLoading] = useState(mode === "edit");
   const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    if (mode === 'edit' && id) {
+    if (mode === "edit" && id) {
       const fetchExpense = async () => {
         try {
-          const res = await api.get('/expenses');
+          const res = await api.get("/expenses");
           const expense = res.data.find((e) => e._id === id);
           if (!expense) {
-            setError('Expense not found');
+            setError("Expense not found");
           } else {
             setInitialData(expense);
           }
         } catch (err) {
-          setError(err.response?.data?.message || 'Failed to load expense');
+          setError(err.response?.data?.message || "Failed to load expense");
         } finally {
           setLoading(false);
         }
@@ -37,16 +37,16 @@ const ExpenseFormPage = ({ mode }) => {
 
   const handleSubmit = async (payload) => {
     setSubmitting(true);
-    setError('');
+    setError("");
     try {
-      if (mode === 'edit' && id) {
+      if (mode === "edit" && id) {
         await api.put(`/expenses/${id}`, payload);
       } else {
-        await api.post('/expenses', payload);
+        await api.post("/expenses", payload);
       }
-      navigate('/dashboard');
+      navigate("/dashboard");
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to save expense');
+      setError(err.response?.data?.message || "Failed to save expense");
     } finally {
       setSubmitting(false);
     }
@@ -58,12 +58,12 @@ const ExpenseFormPage = ({ mode }) => {
     <div className="space-y-4">
       <div>
         <h1 className="text-xl font-semibold text-slate-50">
-          {mode === 'edit' ? 'Edit Expense' : 'Add Expense'}
+          {mode === "edit" ? "Edit Expense" : "Add Expense"}
         </h1>
         <p className="text-xs text-slate-400">
-          {mode === 'edit'
-            ? 'Update the details of your expense.'
-            : 'Record a new expense in your history.'}
+          {mode === "edit"
+            ? "Update the details of your expense."
+            : "Record a new expense in your history."}
         </p>
       </div>
 
@@ -90,4 +90,3 @@ const ExpenseFormPage = ({ mode }) => {
 };
 
 export default ExpenseFormPage;
-
